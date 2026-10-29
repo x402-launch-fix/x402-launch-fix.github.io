@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>x402 Launch Fix: get your paid API working and listed</title>
+<meta name="description" content="We diagnose and fix x402 paid APIs: routes listed as gone, wrong 402 responses, testnet-only accepts, Bazaar and 402index listing issues. Pay in USDC on Base.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>x402 Launch Fix</h1>
+  <p class="lead">Your x402 endpoint returns the wrong thing to crawlers, wallets or agents? We find the exact cause and fix it. Paid in USDC on Base. No calls, no email needed.</p>
+  <p><a class="btn" href="https://github.com/x402-launch-fix/orders/issues/new?template=order.yml">Order now</a> <a class="btn ghost" href="#check">Free self-check</a></p>
+</header>
+
+<main>
+<section>
+  <h2>What we fix</h2>
+  <ul class="cards">
+    <li><b>Route listed as "gone"</b><br>GET/HEAD returns 404 while POST returns 402, so indexers and health checks drop your route.</li>
+    <li><b>Template paths being charged</b><br>Literal placeholders like <code>/:id</code> or <code>{symbol}</code> are listed and charged as-is.</li>
+    <li><b>Testnet-only accepts</b><br>Your 402 only offers Base Sepolia, so real buyers on Base mainnet cannot pay.</li>
+    <li><b>Version mismatch</b><br>The 402 body says x402 v1 while the header says v2 (or the reverse), and clients reject it.</li>
+    <li><b>400/401 before 402</b><br>Validation or auth runs before the payment challenge, so agents never see the price.</li>
+    <li><b>Listing issues</b><br>Missing or broken entries in the CDP Bazaar, 402index or agentexchange: wrong metadata, stale routes, no discovery info.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Offers</h2>
+  <div class="offers">
+    <div class="offer"><h3>Quick Fix</h3><p class="price">49 USDC</p><p>One concrete issue diagnosed and fixed (or exact patch delivered) within 2 hours of payment. <b>Refunded if not fixed.</b></p></div>
+    <div class="offer"><h3>Launch Check</h3><p class="price">149 USDC</p><p>Full audit of your x402 routes: status codes, 402 payload, networks, versions, discovery and listings. Written report with prioritised fixes.</p></div>
+    <div class="offer"><h3>Fix &amp; List</h3><p class="price">449 USDC</p><p>Launch Check, plus we fix the issues found and get your routes correctly listed in the Bazaar and indexes.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>How to order (no email)</h2>
+  <ol>
+    <li><a href="https://github.com/x402-launch-fix/orders/issues/new?template=order.yml">Open an order</a> on GitHub: choose the offer, paste your endpoint URL and a contact handle (X, Telegram, Discord or GitHub).</li>
+    <li>Pay in USDC on <b>Base network only</b> to:<br><code class="addr">0x88d4091208FB38C8531BD8Feeaa32E8B3f3D6FD4</code></li>
+    <li>Paste the transaction hash in your issue. We start as soon as the payment is confirmed on-chain.</li>
+  </ol>
+  <p class="warn">Base mainnet only. USDC sent on any other network (Ethereum, Arbitrum, Solana…) cannot be recovered.</p>
+  <p>Pay from a mobile wallet (EIP-681 link, USDC on Base):</p>
+  <p>
+    <a class="btn small" href="ethereum:0x833589fCD6eDb6E08f4c7C32D065CA4CE6aB2913@8453/transfer?address=0x88d4091208FB38C8531BD8Feeaa32E8B3f3D6FD4&amp;uint256=49000000">Pay 49 USDC</a>
+    <a class="btn small" href="ethereum:0x833589fCD6eDb6E08f4c7C32D065CA4CE6aB2913@8453/transfer?address=0x88d4091208FB38C8531BD8Feeaa32E8B3f3D6FD4&amp;uint256=149000000">Pay 149 USDC</a>
+    <a class="btn small" href="ethereum:0x833589fCD6eDb6E08f4c7C32D065CA4CE6aB2913@8453/transfer?address=0x88d4091208FB38C8531BD8Feeaa32E8B3f3D6FD4&amp;uint256=449000000">Pay 449 USDC</a>
+  </p>
+  <p class="small">Or scan (address only, select USDC on Base in your wallet):</p>
+  <img class="qr" src="qr-address.png" alt="QR code of 0x88d4091208FB38C8531BD8Feeaa32E8B3f3D6FD4" width="180" height="180">
+</section>
+
+<section id="check">
+  <h2>Free self-check</h2>
+  <p>Run this against one of your paid routes. A healthy x402 route answers <b>402</b> to both GET and POST (or at least not 404 on GET/HEAD), and offers Base mainnet (<code>eip155:8453</code> or <code>base</code>).</p>
+<pre><code>URL="https://your-api.example.com/your/paid/route"
+for m in GET HEAD POST; do
+  printf "%-5s " $m; curl -s -o /dev/null -w "%{http_code}\n" -X $m "$URL"
+done
+curl -s -D - -o /tmp/402.json "$URL" | grep -i "payment-required\|x-payment" | cut -c1-120
+grep -o '"x402Version":[0-9]*\|"network":"[^"]*"' /tmp/402.json | sort -u</code></pre>
+  <p>Got a 404, a 400/401, only <code>base-sepolia</code>, or a version that disagrees with your header? That is exactly what the Quick Fix covers.</p>
+</section>
+</main>
+
+<footer>
+  <p>x402 Launch Fix · Orders and questions: <a href="https://github.com/x402-launch-fix/orders/issues">github.com/x402-launch-fix/orders</a></p>
+</footer>
+</body>
+</html>
